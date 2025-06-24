@@ -1,53 +1,45 @@
 #!/bin/bash
-# 注意：请确保你已经成功申请过 SSL 证书，否则撤销操作会失败
-
 set -e
 
-read -p "请输入你要撤销 SSL 证书的二级域名: " DOMAIN
+read -p "请输入你想撤销证书的二级域名: " DOMAIN
 
-echo "请选择你申请 SSL 证书时使用的证书颁发机构 (CA):"
-echo "1) Let's Encrypt"
-echo "2) Buypass"
-echo "3) ZeroSSL"
-read -p "输入选项 (1, 2, or 3): " CA_OPTION
+CA_FILE="$HOME/.acme.sh/${DOMAIN}/ca"
 
-case $CA_OPTION in
-    1) CA_SERVER="letsencrypt" ;;
-    2) CA_SERVER="buypass" ;;
-    3) CA_SERVER="zerossl" ;;
-    *) echo "无效选项"; exit 1 ;;
-esac
-
-if [ ! -d "$HOME/.acme.sh" ]; then
-    echo "未检测到 acme.sh，请检查是否已经安装。"
+if [ ! -f "$CA_FILE" ]; then
+    echo "找不到 $DOMAIN 的证书CA信息文件: $CA_FILE"
     exit 1
 fi
 
-export PATH="$HOME/.acme.sh:$PATH"
+CA_URL=$(cat "$CA_FILE")
 
-echo "正在撤销 SSL 证书..."
+if [[ "$CA_URL" == *"letsencrypt"* ]]; then
+    CA_SERVER="letsencrypt"
+elif [[ "$CA_URL" == *"buypass"* ]]; then
+    CA_SERVER="buypass"
+elif [[ "$CA_URL" == *"zerossl"* ]]; then
+    CA_SERVER="zerossl"
+else
+    echo "无法识别CA服务器: $CA_URL"
+    exit 1
+fi
+
+echo "检测到证书颁发机构为: $CA_SERVER"
+
 ~/.acme.sh/acme.sh --revoke -d "$DOMAIN" --server "$CA_SERVER"
 
-echo "正在删除证书文件..."
-rm -f /root/"$DOMAIN".crt /root/"$DOMAIN".key
-rm -rf ~/.acme.sh/"$DOMAIN"
+if [ $? -eq 0 ]; then
+    echo "证书已成功撤销: $DOMAIN"
 
-echo "正在取消自动续期计划..."
-~/.acme.sh/acme.sh --remove -d "$DOMAIN"
+    rm -f /root/${DOMAIN}.key /root/${DOMAIN}.crt
 
-if [ -f /root/renew_cert.sh ]; then
-    rm -f /root/renew_cert.sh
+    RENEW_SCRIPT="/root/renew_cert.sh"
+    if [ -f "$RENEW_SCRIPT" ]; then
+        rm -f "$RENEW_SCRIPT"
+        echo "已删除自动续期脚本：$RENEW_SCRIPT"
+    fi
+
+    crontab -l | grep -v "$RENEW_SCRIPT" | crontab -
+    echo "已从crontab中删除自动续期任务。"
+else
+    echo "证书撤销失败: $DOMAIN"
 fi
-
-echo "正在删除自动续期的 crontab 任务..."
-crontab -l | grep -v "/root/renew_cert.sh" | crontab -
-
-read -p "是否卸载 acme.sh？(y/n): " REMOVE_ACME
-if [[ "$REMOVE_ACME" == "y" || "$REMOVE_ACME" == "Y" ]]; then
-    echo "正在卸载 acme.sh..."
-    ~/.acme.sh/acme.sh --uninstall
-    rm -rf ~/.acme.sh
-    echo "acme.sh 已卸载。"
-fi
-
-echo "SSL 证书已成功撤销，相关文件和续期任务已清理完毕。"
