@@ -1,11 +1,12 @@
 #!/bin/bash
-echo
 if pgrep singbox > /dev/null; then
   echo "singbox 进程存在，准备杀死..."
+  echo
   pkill singbox
   sleep 2
   if pgrep singbox > /dev/null; then
     echo "singbox 进程未退出，强制杀死"
+    echo
     pkill -9 singbox
   fi
 fi
