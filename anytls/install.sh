@@ -80,7 +80,7 @@ chmod +x singbox
 cat <<- EOF > config.json
 {
   "log": {
-    "level": "info"
+    "level": "error"
   },
   "dns": {
     "servers": [
