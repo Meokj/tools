@@ -64,7 +64,6 @@ if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
   exit 1
 fi
 
-
 cd /usr/local || exit
 if [ -d anytls ]; then
   rm -rf anytls
@@ -88,20 +87,20 @@ cat <<- EOF > config.json
       {
         "tag": "cloudflare",
         "address": "1.1.1.1",
-        "address_strategy": "only_ipv4"
+        "address_strategy": "ipv4_only"
       },
       {
         "tag": "google",
         "address": "8.8.8.8",
-        "address_strategy": "only_ipv4"
+        "address_strategy": "ipv4_only"
       },
       {
         "tag": "quad9",
         "address": "9.9.9.9",
-        "address_strategy": "only_ipv4"
+        "address_strategy": "ipv4_only"
       }
     ],
-    "strategy": "only_ipv4"
+    "strategy": "ipv4_only"
   },
   "inbounds": [
     {
@@ -136,8 +135,7 @@ cat <<- EOF > config.json
 EOF
 
 echo "启动 singbox..."
-# nohup ./singbox run > /dev/null 2>&1 &
-nohup ./singbox run > singbox.log 2>&1 &
+nohup ./singbox run > /dev/null 2>&1 &
 
 sleep 2
 
