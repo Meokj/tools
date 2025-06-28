@@ -64,6 +64,7 @@ if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
   exit 1
 fi
 
+
 cd /usr/local || exit
 if [ -d anytls ]; then
   rm -rf anytls
