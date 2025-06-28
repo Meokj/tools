@@ -80,51 +80,58 @@ chmod +x singbox
 
 cat <<- EOF > config.json
 {
-	"log": {
-		"level": "info"
-	},
-	"dns": {
-		"servers": [{
-				"tag": "cloudflare",
-				"address": "1.1.1.1",
-				"address_strategy": "prefer_ipv4"
-			},
-			{
-				"tag": "google",
-				"address": "8.8.8.8",
-				"address_strategy": "prefer_ipv4"
-			},
-			{
-				"tag": "quad9",
-				"address": "9.9.9.9",
-				"address_strategy": "prefer_ipv4"
-			}
-		],
-		"strategy": "prefer_ipv4"
-	},
-	"inbounds": [{
-		"type": "anytls",
-		"tag": "anytls-in",
-		"listen": "::",
-		"listen_port": $PORT,
-		"users": [{
-			"name": "admin",
-			"password": "$PASSWORD"
-		}],
-		"tls": {
-			"enabled": true,
-			"certificate_path": "$CRT_FILE",
-			"key_path": "$KEY_FILE",
-			"server_name": "$DOMAIN"
-		}
-	}],
-	"outbounds": [{
-		"type": "direct",
-		"tag": "direct-out"
-	}],
-	"route": {
-		"rules": []
-	}
+  "log": {
+    "level": "info"
+  },
+  "dns": {
+    "servers": [
+      {
+        "tag": "cloudflare",
+        "address": "1.1.1.1",
+        "address_strategy": "prefer_ipv4"
+      },
+      {
+        "tag": "google",
+        "address": "8.8.8.8",
+        "address_strategy": "prefer_ipv4"
+      },
+      {
+        "tag": "quad9",
+        "address": "9.9.9.9",
+        "address_strategy": "prefer_ipv4"
+      }
+    ],
+    "strategy": "prefer_ipv4"
+  },
+  "inbounds": [
+    {
+      "type": "anytls",
+      "tag": "anytls-in",
+      "listen": "::",
+      "listen_port": $PORT,
+      "users": [
+        {
+          "name": "admin",
+          "password": "$PASSWORD"
+        }
+      ],
+      "tls": {
+        "enabled": true,
+        "certificate_path": "$CRT_FILE",
+        "key_path": "$KEY_FILE",
+        "server_name": "$DOMAIN"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "direct-out"
+    }
+  ],
+  "route": {
+    "rules": []
+  }
 }
 EOF
 
