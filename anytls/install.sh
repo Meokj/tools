@@ -86,25 +86,25 @@ cat << EOF > config.json
 		"servers": [{
 				"tag": "cloudflare",
 				"address": "1.1.1.1",
-				"address_strategy": "only_ipv4"
+				"address_strategy": "prefer_ipv4"
 			},
 			{
 				"tag": "google",
 				"address": "8.8.8.8",
-				"address_strategy": "only_ipv4"
+				"address_strategy": "prefer_ipv4"
 			},
 			{
 				"tag": "quad9",
 				"address": "9.9.9.9",
-				"address_strategy": "only_ipv4"
+				"address_strategy": "prefer_ipv4"
 			}
 		],
-		"strategy": "only_ipv4"
+		"strategy": "prefer_ipv4"
 	},
 	"inbounds": [{
 		"type": "anytls",
 		"tag": "anytls-in",
-		"listen": "0.0.0.0",
+		"listen": "::",
 		"listen_port": $PORT,
 		"users": [{
 			"name": "admin",
