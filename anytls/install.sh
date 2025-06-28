@@ -78,7 +78,7 @@ cd anytls || exit
 mv sing-box singbox
 chmod +x singbox
 
-cat << EOF > config.json
+cat <<- EOF > config.json
 {
 	"log": {
 		"level": "info"
