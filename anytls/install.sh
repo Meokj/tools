@@ -107,7 +107,7 @@ cat <<- EOF > config.json
     {
       "type": "anytls",
       "tag": "anytls-in",
-      "listen": "::",
+      "listen": "0.0.0.0",
       "listen_port": $PORT,
       "users": [
         {
