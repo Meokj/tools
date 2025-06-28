@@ -134,16 +134,33 @@ cat <<- EOF > config.json
 }
 EOF
 
-echo "启动 singbox..."
-nohup ./singbox run > /dev/null 2>&1 &
+echo "配置 systemd 服务..."
+cat <<EOF | sudo tee /etc/systemd/system/singbox.service > /dev/null
+[Unit]
+Description=Sing-box Proxy Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/anytls/singbox run
+WorkingDirectory=/usr/local/anytls
+Restart=on-failure
+StandardOutput=append:/var/log/singbox.log
+StandardError=append:/var/log/singbox.log
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable singbox
+sudo systemctl restart singbox
 
 sleep 2
-
-if pgrep -f "singbox" > /dev/null; then
-  echo "singbox 启动成功！"
+if systemctl is-active --quiet singbox; then
+  echo "singbox 已通过 systemd 启动成功！"
+  echo "日志文件位置：/var/log/singbox.log"
 else
-  echo "singbox 启动失败，请检查配置"
+  echo "singbox 启动失败，请使用 'journalctl -u singbox' 查看详细日志"
   exit 1
 fi
-
-
