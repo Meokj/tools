@@ -136,7 +136,8 @@ cat <<- EOF > config.json
 EOF
 
 echo "启动 singbox..."
-nohup ./singbox run > /dev/null 2>&1 &
+# nohup ./singbox run > /dev/null 2>&1 &
+nohup ./singbox run > singbox.log 2>&1 &
 
 sleep 2
 
