@@ -98,6 +98,11 @@ cat <<- EOF > config.json
         "tag": "quad9",
         "address": "9.9.9.9",
         "address_strategy": "ipv4_only"
+      },
+      {
+        "tag": "ali",
+        "address": "223.5.5.5",
+        "address_strategy": "ipv4_only"
       }
     ],
     "strategy": "ipv4_only"
