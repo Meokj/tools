@@ -44,7 +44,7 @@ cd anytls || exit
 mv sing-box singbox
 chmod +x singbox
 
-REALITY_KEYS=$(/usr/local/anytls/singbox generate reality-keypair)
+REALITY_KEYS=$(./singbox generate reality-keypair)
 PRIVATE_KEY=$(echo "$REALITY_KEYS" | grep 'Private key' | awk '{print $3}')
 PUBLIC_KEY=$(echo "$REALITY_KEYS" | grep 'Public key' | awk '{print $3}')
 SHORT_ID=$(openssl rand -hex 8)
