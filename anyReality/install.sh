@@ -31,25 +31,6 @@ while true; do
   fi
 done
 
-REALITY_KEYS=$(./singbox generate reality-keypair)
-PRIVATE_KEY=$(echo "$REALITY_KEYS" | grep 'Private key' | awk '{print $3}')
-PUBLIC_KEY=$(echo "$REALITY_KEYS" | grep 'Public key' | awk '{print $3}')
-SHORT_ID=$(openssl rand -hex 8)
-
-echo
-echo "-----------------------------------"
-echo "📌 监听端口     : $PORT"
-echo "🔑 密码         : $PASSWORD"
-echo "🔐 Reality 公钥  : $PUBLIC_KEY"
-echo "🔐 Short ID   : $SHORT_ID"
-echo "-----------------------------------"
-echo
-read -rp "确认以上信息无误？输入 y 继续，其他键退出: " CONFIRM
-
-if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
-  exit 1
-fi
-
 cd /usr/local || exit
 if [ -d anytls ]; then
   rm -rf anytls
@@ -62,6 +43,11 @@ mv sing-box-1.12.0-beta.28-linux-amd64 anytls
 cd anytls || exit
 mv sing-box singbox
 chmod +x singbox
+
+REALITY_KEYS=$(/usr/local/anytls/singbox generate reality-keypair)
+PRIVATE_KEY=$(echo "$REALITY_KEYS" | grep 'Private key' | awk '{print $3}')
+PUBLIC_KEY=$(echo "$REALITY_KEYS" | grep 'Public key' | awk '{print $3}')
+SHORT_ID=$(openssl rand -hex 8)
 
 cat <<- EOF > config.json
 {
@@ -131,6 +117,14 @@ sleep 2
 if systemctl is-active --quiet singbox; then
   echo "singbox 已通过 systemd 启动成功！"
   echo "日志文件位置：/var/log/singbox.log"
+  echo
+  echo "-----------------------------------"
+  echo "📌 监听端口     : $PORT"
+  echo "🔑 密码         : $PASSWORD"
+  echo "🔐 Reality 公钥  : $PUBLIC_KEY"
+  echo "🔐 Short ID   : $SHORT_ID"
+  echo "-----------------------------------"
+  echo
 else
   echo "singbox 启动失败，请使用 'journalctl -u singbox' 查看详细日志"
   exit 1
