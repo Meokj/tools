@@ -54,7 +54,7 @@ cat <<- EOF > config.json
     "inbounds": [
         {
             "type": "anytls",
-            "listen": "0.0.0.0",
+            "listen": "::",
             "listen_port": $PORT,
             "users": [
                 {
