@@ -45,8 +45,8 @@ mv sing-box singbox
 chmod +x singbox
 
 REALITY_KEYS=$(./singbox generate reality-keypair)
-PRIVATE_KEY=$(echo "$REALITY_KEYS" | grep 'Private key' | awk '{print $3}')
-PUBLIC_KEY=$(echo "$REALITY_KEYS" | grep 'Public key' | awk '{print $3}')
+PRIVATE_KEY=$(echo "$REALITY_KEYS" | grep 'PrivateKey:' | awk '{print $2}')
+PUBLIC_KEY=$(echo "$REALITY_KEYS" | grep 'PublicKey:' | awk '{print $2}')
 SHORT_ID=$(openssl rand -hex 8)
 
 cat <<- EOF > config.json
