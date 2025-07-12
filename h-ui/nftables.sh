@@ -77,7 +77,7 @@ EOF
 echo "已写入 /etc/nftables.conf"
 
 nft -f /etc/nftables.conf
-echo "nftables 配置已加载"
+echo "nftables 配置已加载，SSH端口为默认端口22"
 
 systemctl enable nftables
 systemctl restart nftables
