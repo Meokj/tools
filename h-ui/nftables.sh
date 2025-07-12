@@ -3,8 +3,8 @@ set -e
 
 if ! command -v nft >/dev/null 2>&1; then
     echo "nft 命令未找到，尝试安装 nftables ..."
-    sudo apt update
-    sudo apt install -y nftables
+    apt update
+    apt install -y nftables
 fi
 
 cat > /etc/nftables.conf <<'EOF'
@@ -76,7 +76,7 @@ echo "nftables 服务已启用并设置为开机自启"
 
 echo "=============================================="
 echo "停用防火墙命令（使规则不生效）:"
-echo "    sudo systemctl stop nftables && sudo nft flush ruleset"
+echo "    systemctl stop nftables && sudo nft flush ruleset"
 echo "启用防火墙命令（加载规则并开机自启）:"
-echo "    sudo systemctl enable nftables && sudo systemctl start nftables"
+echo "    systemctl enable nftables && sudo systemctl start nftables"
 echo "=============================================="
