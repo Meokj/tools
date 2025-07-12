@@ -87,3 +87,7 @@ echo "    systemctl stop nftables && nft flush ruleset"
 echo "启用防火墙命令（加载规则并开机自启）:"
 echo "    systemctl enable nftables && systemctl start nftables"
 echo "=============================================="
+
+echo
+echo "已有规则如下"
+nft list ruleset
