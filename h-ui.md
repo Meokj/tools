@@ -8,7 +8,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/Meokj/tools/main/h-ui/install_
 bash <(curl -Ls https://raw.githubusercontent.com/Meokj/tools/main/h-ui/uninstall_hui.sh)
 ```
 
-* nftables
+* 安装配置 nftables 防火墙（端口跳跃）
 ```bash
 bash <(curl -Ls https://raw.githubusercontent.com/Meokj/tools/main/h-ui/nftables.sh)
 ```
