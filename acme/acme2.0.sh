@@ -1,22 +1,7 @@
 #!/bin/bash
 set -e
 clear
-
-check_port() {
-    PORT=80
-    if ! ufw status | grep -q "Status: active"; then
-        echo "UFW 防火墙未启用，如果使用的是别的防火墙，请先自行放行 80 端口"
-        return
-    fi
-
-    if ufw status | grep -qE "^[0-9.\/]*\s*$PORT/tcp\s+ALLOW"; then
-        echo "UFW 已放行端口 $PORT"
-    else
-        echo "UFW 未放行端口 $PORT"
-        exit 1
-    fi
-}
-
+echo "如果安装的有防火墙，请先放行80端口，并且保证80端口未被占用"
 
 check_os() {
     if [ -f /etc/os-release ]; then
@@ -114,7 +99,6 @@ create_cron_job() {
 }
 
 main() {
-    check_port
     check_os
     get_user_input
     choose_ca
