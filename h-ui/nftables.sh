@@ -27,7 +27,7 @@ table inet filter {
 
         iif "lo" accept
         ct state established,related accept
-        tcp dport 22 accept         # SSH
+        tcp dport 2022 accept       # SSH
         tcp dport 80 accept         # HTTP
         tcp dport 443 accept        # HTTPS
 
@@ -40,10 +40,8 @@ table inet filter {
         tcp dport 10000-20000 accept  # 端口跳跃范围 TCP
         udp dport 10000-20000 accept  # 端口跳跃范围 UDP
 
-        tcp dport 6812 accept       # 其它自定义端口
-        tcp dport 8443 accept       
+        tcp dport 6812 accept       # 其它自定义端口 
         udp dport 8443 accept      
-
     }
 
     chain FORWARD {
@@ -59,7 +57,6 @@ table ip nat {
     chain prerouting {
         type nat hook prerouting priority dstnat; policy accept;
 
-        tcp dport 10000-20000 dnat to :8443
         udp dport 10000-20000 dnat to :8443
     }
 }
@@ -68,7 +65,6 @@ table ip6 nat {
     chain prerouting {
         type nat hook prerouting priority dstnat; policy accept;
 
-        tcp dport 10000-20000 dnat to :8443
         udp dport 10000-20000 dnat to :8443
     }
 }
@@ -77,7 +73,9 @@ EOF
 echo "已写入 /etc/nftables.conf"
 
 nft -f /etc/nftables.conf
-echo "nftables 配置已加载，SSH端口为默认端口22"
+echo
+echo "注意：nftables 配置已加载，SSH端口已设置为2022"
+echo
 
 systemctl enable nftables
 systemctl restart nftables
