@@ -1,6 +1,17 @@
 #!/bin/bash
 set -e
 
+read -p "你是否熟悉 nftables 防火墙配置？(y/n) " answer
+case "$answer" in
+    y|Y|yes|YES)
+        echo "继续执行脚本。。。"
+        ;;
+    *)
+        echo "退出脚本，请先了解 nftables 防火墙相关知识。"
+        exit 1
+        ;;
+esac
+
 if ! command -v nft >/dev/null 2>&1; then
     echo "nft 命令未找到，尝试安装 nftables ..."
     apt update
@@ -16,8 +27,7 @@ table inet filter {
 
         iif "lo" accept
         ct state established,related accept
-        tcp dport 22 accept         # 默认SSH
-        tcp dport 2022 accept       # SSH
+        tcp dport 22 accept         # SSH
         tcp dport 80 accept         # HTTP
         tcp dport 443 accept        # HTTPS
 
@@ -31,7 +41,6 @@ table inet filter {
         udp dport 10000-20000 accept  # 端口跳跃范围 UDP
 
         tcp dport 6812 accept       # 其它自定义端口
-
         tcp dport 8443 accept       
         udp dport 8443 accept      
 
