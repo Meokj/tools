@@ -1,5 +1,12 @@
 #!/bin/bash
 set -e
+
+if ! command -v nft >/dev/null 2>&1; then
+    echo "nft 命令未找到，尝试安装 nftables ..."
+    sudo apt update
+    sudo apt install -y nftables
+fi
+
 cat > /etc/nftables.conf <<'EOF'
 #!/usr/sbin/nft -f
 
@@ -9,7 +16,7 @@ table inet filter {
 
         iif "lo" accept
         ct state established,related accept
-
+        tcp dport 22 accept         # 默认SSH
         tcp dport 2022 accept       # SSH
         tcp dport 80 accept         # HTTP
         tcp dport 443 accept        # HTTPS
