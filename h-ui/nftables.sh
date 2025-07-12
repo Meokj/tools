@@ -27,6 +27,7 @@ table inet filter {
 
         iif "lo" accept
         ct state established,related accept
+        tcp dport 22 accept         # SSH默认
         tcp dport 2022 accept       # SSH
         tcp dport 80 accept         # HTTP
         tcp dport 443 accept        # HTTPS
@@ -73,7 +74,7 @@ echo "已写入 /etc/nftables.conf"
 
 nft -f /etc/nftables.conf
 echo
-echo "注意：nftables 配置已加载，SSH端口已设置为2022"
+echo "注意：nftables 配置已加载，已放行SSH默认端口22"
 echo
 
 systemctl enable nftables
@@ -82,7 +83,7 @@ echo "nftables 服务已启用并设置为开机自启"
 
 echo "=============================================="
 echo "停用防火墙命令（使规则不生效）:"
-echo "    systemctl stop nftables && sudo nft flush ruleset"
+echo "    systemctl stop nftables && nft flush ruleset"
 echo "启用防火墙命令（加载规则并开机自启）:"
-echo "    systemctl enable nftables && sudo systemctl start nftables"
+echo "    systemctl enable nftables && systemctl start nftables"
 echo "=============================================="
