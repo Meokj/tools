@@ -4,17 +4,19 @@ clear
 
 check_port() {
     PORT=80
-    if nc -z 127.0.0.1 $PORT >/dev/null 2>&1; then
-        if lsof -iTCP:$PORT -sTCP:LISTEN >/dev/null 2>&1; then
-            PROCESS=$(lsof -iTCP:$PORT -sTCP:LISTEN | awk 'NR==2 {print $1}')
-            echo "端口 $PORT 被进程 '$PROCESS' 占用，请先终止该进程。"
-            exit 1
-        fi
+    if ! ufw status | grep -q "Status: active"; then
+        echo "UFW 防火墙未启用，如果使用的是别的防火墙，请先自行放行 80 端口"
+        return
+    fi
+
+    if ufw status | grep -qE "^[0-9.\/]*\s*$PORT/tcp\s+ALLOW"; then
+        echo "UFW 已放行端口 $PORT"
     else
-        echo "端口 $PORT 未开放，请先开启。"
+        echo "UFW 未放行端口 $PORT"
         exit 1
     fi
 }
+
 
 check_os() {
     if [ -f /etc/os-release ]; then
