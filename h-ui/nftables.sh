@@ -37,7 +37,6 @@ table inet filter {
         tcp dport 53 accept         # DNS TCP
         udp dport 53 accept         # DNS UDP
 
-        tcp dport 10000-20000 accept  # 端口跳跃范围 TCP
         udp dport 10000-20000 accept  # 端口跳跃范围 UDP
 
         tcp dport 6812 accept       # 其它自定义端口 
