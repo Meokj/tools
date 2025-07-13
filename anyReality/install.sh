@@ -80,7 +80,7 @@ cat <<- EOF > config.json
                     "enabled": true,
                     "handshake": {
                         "server": "yahoo.com",
-                        "server_port": $PORT
+                        "server_port": 443
                     },
                     "private_key": "$PRIVATE_KEY",
                     "short_id": "$SHORT_ID"
