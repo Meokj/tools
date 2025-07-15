@@ -51,43 +51,133 @@ SHORT_ID=$(openssl rand -hex 8)
 
 cat <<- EOF > config.json
 {
-    "inbounds": [
-        {
-            "type": "anytls",
-            "listen": "::",
-            "listen_port": $PORT,
-            "users": [
-                {
-                    "name": "user",
-                    "password": "$PASSWORD"
-                }
-            ],
-            "padding_scheme": [
-                "stop=8",
-                "0=30-30",
-                "1=100-400",
-                "2=400-500,c,500-1000,c,500-1000,c,500-1000,c,500-1000",
-                "3=9-9,500-1000",
-                "4=500-1000",
-                "5=500-1000",
-                "6=500-1000",
-                "7=500-1000"
-            ],
-            "tls": {
-                "enabled": true,
-                "server_name": "yahoo.com",
-                "reality": {
-                    "enabled": true,
-                    "handshake": {
-                        "server": "yahoo.com",
-                        "server_port": 443
-                    },
-                    "private_key": "$PRIVATE_KEY",
-                    "short_id": "$SHORT_ID"
-                }
-            }
-        }
-    ]
+	"dns": {
+		"servers": [{
+				"tag": "google",
+				"type": "udp",
+				"server": "8.8.8.8"
+			},
+			{
+				"tag": "cloudflare",
+				"type": "udp",
+				"server": "1.1.1.1"
+			}
+		],
+		"rules": [{
+				"query_type": "HTTPS",
+				"action": "reject"
+			},
+			{
+				"query_type": [
+					"A",
+					"AAAA"
+				],
+				"server": "cloudflare"
+			}
+		],
+		"final": "cloudflare",
+		"strategy": "ipv4_only"
+	},
+	"inbounds": [{
+		"type": "anytls",
+		"listen": "::",
+		"listen_port": $PORT,
+		"users": [{
+			"name": "user",
+			"password": "$PASSWORD"
+		}],
+		"padding_scheme": [
+			"stop=8",
+			"0=30-30",
+			"1=100-400",
+			"2=400-500,c,500-1000,c,500-1000,c,500-1000,c,500-1000",
+			"3=9-9,500-1000",
+			"4=500-1000",
+			"5=500-1000",
+			"6=500-1000",
+			"7=500-1000"
+		],
+		"tls": {
+			"enabled": true,
+			"server_name": "yahoo.com",
+			"reality": {
+				"enabled": true,
+				"handshake": {
+					"server": "yahoo.com",
+					"server_port": 443
+				},
+				"private_key": "$PRIVATE_KEY",
+				"short_id": "$SHORT_ID"
+			}
+		}
+	}],
+	"outbounds": [{
+			"tag": "代理出站",
+			"type": "selector",
+			"outbounds": [
+				"直接出站"
+			]
+		},
+		{
+			"tag": "直接出站",
+			"type": "direct"
+		}
+	],
+	"route": {
+		"rules": [{
+				"action": "sniff",
+				"sniffer": [
+					"http",
+					"tls",
+					"quic",
+					"dns"
+				]
+			},
+			{
+				"type": "logical",
+				"mode": "or",
+				"rules": [{
+						"port": 53
+					},
+					{
+						"protocol": "dns"
+					}
+				],
+				"action": "hijack-dns"
+			},
+			{
+				"ip_is_private": true,
+				"outbound": "直接出站"
+			},
+			{
+				"rule_set": "geosite-ai",
+				"outbound": "代理出站"
+			}
+		],
+		"rule_set": [{
+			"tag": "geosite-ai",
+			"type": "remote",
+			"format": "binary",
+			"url": "https://github.com/qljsyph/ruleset-icon/raw/refs/heads/main/sing-box/geosite/ai-domain.srs",
+			"download_detour": "直接出站"
+		}],
+		"final": "直接出站",
+		"auto_detect_interface": true,
+		"default_domain_resolver": {
+			"server": "cloudflare"
+		}
+	},
+	"experimental": {
+		"cache_file": {
+			"enabled": true,
+			"path": "/usr/local/anytls/cache.db"
+		}
+	},
+	"log": {
+		"disabled": false,
+		"level": "info",
+		"timestamp": true
+	}
 }
 EOF
 
