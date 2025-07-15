@@ -434,7 +434,7 @@ cat <<- EOF > client.json
 				"reality": {
 					"enabled": true,
 					"public_key": "$PUBLIC_KEY",
-					"short_id": "SHORT_ID"
+					"short_id": "$SHORT_ID"
 				}
 			}
 		}
