@@ -87,7 +87,7 @@ cat <<- EOF > config.json
       "type": "vless",
       "listen": "::",
       "listen_port": 443,
-      "tag": "vless-xhttp-tls-in",
+      "tag": "vless-ws-tls-in",
       "reuse_port": true,
       "tcp_fast_open": true,
       "tcp_keepalive": true,
@@ -104,9 +104,8 @@ cat <<- EOF > config.json
         "alpn": ["h2", "http/1.1"]
       },
       "transport": {
-        "type": "xhttp",
-        "path": "$VLESS_PATH",
-        "host": "$DOMAIN"
+        "type": "ws",
+        "path": "$VLESS_PATH"
       }
     }
   ],
@@ -132,16 +131,15 @@ cat <<- EOF > config.json
       "type": "vless",
       "listen": "127.0.0.1",
       "listen_port": $PORT,
-      "tag": "vless-xhttp-tls-in",
+      "tag": "vless-ws-tls-in",
       "users": [
         {
           "uuid": "$UUID"
         }
       ],
       "transport": {
-        "type": "xhttp",
-        "path": "$VLESS_PATH",
-        "host": "$DOMAIN"
+        "type": "ws",
+        "path": "$VLESS_PATH"
       }
     }
   ],
@@ -185,7 +183,7 @@ if systemctl is-active --quiet singbox; then
   echo "未监听非标端口443，请配置NGINX进行转发"
   echo "VLESS+XHTTP+TLS节点信息如下，粘贴导入使用"
   echo "================================================================="
-  echo -n "vless://${UUID}@{$DOMAIN}:443?type=xhttp&encryption=none$security=tls&host=${DOMAIN}&path=${ENCODED_PATH}&sni=${DOMAIN}#${DOMAIN}" | base64
+  echo -n "vless://${UUID}@{$DOMAIN}:443?type=ws&encryption=none$security=tls&path=${ENCODED_PATH}&sni=${DOMAIN}#VLESS+WS+TLS" | base64
   echo "================================================================="
 else
   echo "singbox 启动失败，请使用 'journalctl -u singbox' 查看详细日志"
