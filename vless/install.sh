@@ -28,15 +28,9 @@ if [ ! -d "$CERT_DIR" ]; then
   exit 1
 fi
 
-if ! command -v uuidgen >/dev/null 2>&1; then
-  echo "未找到 uuidgen，正在安装..."
-  sudo apt update
-  sudo apt install -y uuid-runtime
-fi
-
 CRT_FILE=$(find "$CERT_DIR" -maxdepth 1 -name "*.crt" | head -n 1)
 KEY_FILE=$(find "$CERT_DIR" -maxdepth 1 -name "*.key" | head -n 1)
-UUID=$(uuidgen)
+UUID=$(cat /proc/sys/kernel/random/uuid)
 
 if [ -z "$CRT_FILE" ] || [ -z "$KEY_FILE" ]; then
   echo "在目录中未找到 .crt 或 .key 文件"
