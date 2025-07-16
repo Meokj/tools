@@ -84,8 +84,8 @@ cat <<- EOF > config.json
           "flow": "xtls-rprx-vision"
         }
       ],
-      "transport": {
-        "type": "tls",
+      "tls": {
+        "enabled": true,
         "server_name": "$DOMAIN", 
         "certificate_path": "$CRT_FILE", 
         "key_path": "$KEY_FILE" 
