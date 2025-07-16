@@ -28,6 +28,14 @@ if [ ! -d "$CERT_DIR" ]; then
   exit 1
 fi
 
+length=5
+
+random_str() {
+  cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w $length | head -n 1
+}
+
+PATH="/$(random_str)"
+ENCODED_PATH="${PATH/\//%2F}"
 CRT_FILE=$(find "$CERT_DIR" -maxdepth 1 -name "*.crt" | head -n 1)
 KEY_FILE=$(find "$CERT_DIR" -maxdepth 1 -name "*.key" | head -n 1)
 UUID=$(cat /proc/sys/kernel/random/uuid)
@@ -78,7 +86,10 @@ cat <<- EOF > config.json
       "type": "vless",
       "listen": "::",
       "listen_port": 443,
-      "tag": "vless-ws-tls-in",
+      "tag": "vless-xhttp-tls-in",
+      "reuse_port": true,
+      "tcp_fast_open": true,
+      "tcp_keepalive": true,
       "users": [
         {
           "uuid": "$UUID"
@@ -88,11 +99,13 @@ cat <<- EOF > config.json
         "enabled": true,
         "server_name": "$DOMAIN",
         "certificate_path": "$CRT_FILE",
-        "key_path": "$KEY_FILE"
+        "key_path": "$KEY_FILE",
+        "alpn": ["h2", "http/1.1"]
       },
       "transport": {
-        "type": "ws",
-        "path": "/ws"
+        "type": "xhttp",
+        "path": "$PATH",
+        "host": "$DOMAIN"
       }
     }
   ],
@@ -118,15 +131,16 @@ cat <<- EOF > config.json
       "type": "vless",
       "listen": "127.0.0.1",
       "listen_port": $PORT,
-      "tag": "vless-ws-tls-in",
+      "tag": "vless-xhttp-tls-in",
       "users": [
         {
           "uuid": "$UUID"
         }
       ],
       "transport": {
-        "type": "ws",
-        "path": "/ws"
+        "type": "xhttp",
+        "path": "$PATH",
+        "host": "$DOMAIN"
       }
     }
   ],
@@ -168,9 +182,9 @@ if systemctl is-active --quiet singbox; then
   echo "singbox 已通过 systemd 启动成功！"
   echo "日志文件位置：/var/log/singbox.log"
   echo "未监听非标端口443，请配置NGINX进行转发"
-  echo "VLESS+WS+TLS节点信息如下，粘贴导入使用"
+  echo "VLESS+XHTTP+TLS节点信息如下，粘贴导入使用"
   echo "================================================================="
-  echo -n "vless://${UUID}@{$DOMAIN}:443?type=ws&security=tls&host=${DOMAIN}&path=%2Fws&sni=${DOMAIN}#${DOMAIN}" | base64
+  echo -n "vless://${UUID}@{$DOMAIN}:443?type=xhttp&encryption=none$security=tls&host=${DOMAIN}&path=${ENCODED_PATH}&sni=${DOMAIN}#${DOMAIN}" | base64
   echo "================================================================="
 else
   echo "singbox 启动失败，请使用 'journalctl -u singbox' 查看详细日志"
