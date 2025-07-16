@@ -88,7 +88,6 @@ cat <<- EOF > config.json
       "listen": "::",
       "listen_port": 443,
       "tag": "vless-ws-tls-in",
-      "reuse_port": true,
       "tcp_fast_open": true,
       "tcp_keepalive": true,
       "users": [
