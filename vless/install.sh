@@ -66,6 +66,7 @@ cd anytls || exit
 mv sing-box singbox
 chmod +x singbox
 
+if [ "$PORT" = "443" ]; then
 cat <<- EOF > config.json
 {
   "log": {
@@ -76,19 +77,22 @@ cat <<- EOF > config.json
     {
       "type": "vless",
       "listen": "::",
-      "listen_port": $PORT,
-      "tag": "vless-tls-in",
+      "listen_port": 443,
+      "tag": "vless-ws-tls-in",
       "users": [
         {
-          "uuid": "$UUID",
-          "flow": "xtls-rprx-vision"
+          "uuid": "$UUID"
         }
       ],
       "tls": {
         "enabled": true,
-        "server_name": "$DOMAIN", 
-        "certificate_path": "$CRT_FILE", 
-        "key_path": "$KEY_FILE" 
+        "server_name": "$DOMAIN",
+        "certificate_path": "$CRT_FILE",
+        "key_path": "$KEY_FILE"
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/ws"
       }
     }
   ],
@@ -100,6 +104,42 @@ cat <<- EOF > config.json
   ]
 }
 EOF
+
+else
+
+cat <<- EOF > config.json
+{
+  "log": {
+    "level": "info",
+    "timestamp": true
+  },
+  "inbounds": [
+    {
+      "type": "vless",
+      "listen": "127.0.0.1",
+      "listen_port": $PORT,
+      "tag": "vless-ws-tls-in",
+      "users": [
+        {
+          "uuid": "$UUID"
+        }
+      ],
+      "transport": {
+        "type": "ws",
+        "path": "/ws"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "direct"
+    }
+  ]
+}
+EOF
+
+fi
 
 echo "配置 systemd 服务..."
 cat <<EOF | sudo tee /etc/systemd/system/singbox.service > /dev/null
@@ -127,9 +167,10 @@ sleep 2
 if systemctl is-active --quiet singbox; then
   echo "singbox 已通过 systemd 启动成功！"
   echo "日志文件位置：/var/log/singbox.log"
-  echo "VlESS+TLS节点信息如下，粘贴导入使用"
+  echo "未监听非标端口443，请配置NGINX进行转发"
+  echo "VLESS+WS+TLS节点信息如下，粘贴导入使用"
   echo "================================================================="
-  echo -n "vless://${UUID}@${DOMAIN}:${PORT}?encryption=none&flow=xtls-rprx-vision&type=tcp&security=tls#${DOMAIN}" | base64
+  echo -n "vless://${UUID}@{$DOMAIN}:443?type=ws&security=tls&host=${DOMAIN}&path=%2Fws&sni=${DOMAIN}#${DOMAIN}" | base64
   echo "================================================================="
 else
   echo "singbox 启动失败，请使用 'journalctl -u singbox' 查看详细日志"
