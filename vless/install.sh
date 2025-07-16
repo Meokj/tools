@@ -53,6 +53,7 @@ echo "📌 监听端口     : $PORT"
 echo "📄 证书文件     : $CRT_FILE"
 echo "🔐 密钥文件     : $KEY_FILE"
 echo "🌐 域名         : $DOMAIN"
+echo "🛣️ 路径         : $PATH"
 echo "-----------------------------------"
 echo
 read -rp "确认以上信息无误？输入 y 继续，其他键退出: " CONFIRM
