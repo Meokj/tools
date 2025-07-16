@@ -34,8 +34,8 @@ random_str() {
   cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w $length | head -n 1
 }
 
-PATH="/$(random_str)"
-ENCODED_PATH="${PATH/\//%2F}"
+VLESS_PATH="/$(random_str)"
+ENCODED_PATH="${VLESS_PATH/\//%2F}"
 CRT_FILE=$(find "$CERT_DIR" -maxdepth 1 -name "*.crt" | head -n 1)
 KEY_FILE=$(find "$CERT_DIR" -maxdepth 1 -name "*.key" | head -n 1)
 UUID=$(cat /proc/sys/kernel/random/uuid)
@@ -53,7 +53,7 @@ echo "📌 监听端口     : $PORT"
 echo "📄 证书文件     : $CRT_FILE"
 echo "🔐 密钥文件     : $KEY_FILE"
 echo "🌐 域名         : $DOMAIN"
-echo "🛣️ 路径         : $PATH"
+echo "🛣️ 路径         : $VLESS_PATH"
 echo "-----------------------------------"
 echo
 read -rp "确认以上信息无误？输入 y 继续，其他键退出: " CONFIRM
@@ -105,7 +105,7 @@ cat <<- EOF > config.json
       },
       "transport": {
         "type": "xhttp",
-        "path": "$PATH",
+        "path": "$VLESS_PATH",
         "host": "$DOMAIN"
       }
     }
@@ -140,7 +140,7 @@ cat <<- EOF > config.json
       ],
       "transport": {
         "type": "xhttp",
-        "path": "$PATH",
+        "path": "$VLESS_PATH",
         "host": "$DOMAIN"
       }
     }
