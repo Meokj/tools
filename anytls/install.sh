@@ -12,11 +12,11 @@ if pgrep singbox > /dev/null; then
 fi
 
 while true; do
-  read -rp "请输入监听端口（1025~65535）: " PORT
-  if [[ "$PORT" =~ ^[0-9]{1,5}$ ]] && [ "$PORT" -ge 1025 ] && [ "$PORT" -le 65535 ]; then
+  read -rp "请输入监听端口（443 或 1025~65535）: " PORT
+  if [[ "$PORT" =~ ^[0-9]{1,5}$ ]] && { [ "$PORT" -eq 443 ] || ( [ "$PORT" -ge 1025 ] && [ "$PORT" -le 65535 ] ); }; then
     break
   else
-    echo "无效端口，请输入 1025~65535 范围内的数字。"
+    echo "无效端口，请输入 443 或 1025~65535 范围内的数字。"
   fi
 done
 
