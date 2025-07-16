@@ -69,10 +69,10 @@ if [ -d anytls ]; then
   rm -rf anytls
 fi
 
-rm -f sing-box-1.12.0-beta.28-linux-amd64.tar.gz
-wget https://github.com/SagerNet/sing-box/releases/download/v1.12.0-beta.28/sing-box-1.12.0-beta.28-linux-amd64.tar.gz
-tar -xzvf sing-box-1.12.0-beta.28-linux-amd64.tar.gz && \
-mv sing-box-1.12.0-beta.28-linux-amd64 anytls
+rm -f sing-box-1.12.0-beta.33-linux-amd64.tar.gz
+wget https://github.com/SagerNet/sing-box/releases/download/v1.12.0-beta.33/sing-box-1.12.0-beta.33-linux-amd64.tar.gz
+tar -xzvf sing-box-1.12.0-beta.33-linux-amd64.tar.gz && \
+mv sing-box-1.12.0-beta.33-linux-amd64 anytls
 cd anytls || exit
 mv sing-box singbox
 chmod +x singbox
