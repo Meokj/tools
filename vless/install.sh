@@ -183,7 +183,7 @@ if systemctl is-active --quiet singbox; then
   echo "未监听非标端口443，请配置NGINX进行转发"
   echo "VLESS+WS+TLS节点信息如下，粘贴导入使用"
   echo "================================================================="
-  echo -n "vless://${UUID}@${DOMAIN:443?encryption=none&security=tls&sni=${DOMAIN}&type=ws&host=${DOMAIN}&path=${ENCODED_PATH}#VLESS" | base64
+  echo -n "vless://${UUID}@${DOMAIN}:443?encryption=none&security=tls&sni=${DOMAIN}&type=ws&host=${DOMAIN}&path=${ENCODED_PATH}#VLESS" | base64
   echo "================================================================="
 else
   echo "singbox 启动失败，请使用 'journalctl -u singbox' 查看详细日志"
