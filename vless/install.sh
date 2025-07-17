@@ -116,8 +116,39 @@ cat <<- EOF > config.json
 EOF
 
 else
-  echo "当前仅支持标准端口443"
-  exit 0
+
+cat <<- EOF > config.json
+{
+  "log": {
+    "level": "info",
+    "timestamp": true
+  },
+  "inbounds": [
+    {
+      "type": "vless",
+      "listen": "::",
+      "listen_port": 443,
+      "tag": "vless-ws-tls-in",
+      "users": [
+        {
+          "uuid": "$UUID"
+        }
+      ],
+      "transport": {
+        "type": "ws",
+        "path": "$VLESS_PATH"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "direct",
+      "tag": "direct"
+    }
+  ]
+}
+EOF
+
 fi
 
 echo "配置 systemd 服务..."
