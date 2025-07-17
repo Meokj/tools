@@ -1,5 +1,5 @@
 #!/bin/bash
-if pgrep singbox > /dev/null; then
+if pgrep singbox-vless > /dev/null; then
   echo "singbox-vless 进程存在，准备杀死..."
   echo
   pkill singbox-vless
