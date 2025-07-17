@@ -116,46 +116,8 @@ cat <<- EOF > config.json
 EOF
 
 else
-
-cat <<- EOF > config.json
-{
-  "log": {
-    "level": "info",
-    "timestamp": true
-  },
-  "inbounds": [
-    {
-      "type": "vless",
-      "listen": "127.0.0.1",
-      "listen_port": $PORT,
-      "tag": "vless-ws-tls-in",
-      "users": [
-        {
-          "uuid": "$UUID"
-        }
-      ],
-      "tls": {
-        "enabled": true,
-        "server_name": "$DOMAIN",
-        "certificate_path": "$CRT_FILE",
-        "key_path": "$KEY_FILE",
-        "alpn": ["h2", "http/1.1"]
-      },
-      "transport": {
-        "type": "ws",
-        "path": "$VLESS_PATH"
-      }
-    }
-  ],
-  "outbounds": [
-    {
-      "type": "direct",
-      "tag": "direct"
-    }
-  ]
-}
-EOF
-
+  echo "当前仅支持标准端口443"
+  exit 0
 fi
 
 echo "配置 systemd 服务..."
