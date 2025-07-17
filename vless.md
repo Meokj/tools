@@ -4,5 +4,5 @@ bash <(curl -Ls https://raw.githubusercontent.com/Meokj/tools/main/vless/install
 ```
 * 卸载
 ```
-bash <(curl -Ls https://raw.githubusercontent.com/Meokj/tools/main/anytls/uninstall.sh)
+bash <(curl -Ls https://raw.githubusercontent.com/Meokj/tools/main/vless/uninstall.sh)
 ```
