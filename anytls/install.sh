@@ -167,7 +167,7 @@ if systemctl is-active --quiet singbox; then
   echo "日志文件位置：/var/log/singbox.log"
   echo "手机客户端请使用小火箭或NekoBoxForAndroid，节点信息如下，粘贴导入使用"
   echo "================================================================="
-  echo -n "anytls://$PASSWORD@$DOMAIN:$PORT/?sni=$DOMAIN#anytls" | base64
+  echo "anytls://$PASSWORD@$DOMAIN:$PORT/?sni=$DOMAIN#anytls" 
   echo "================================================================="
 else
   echo "singbox 启动失败，请使用 'journalctl -u singbox' 查看详细日志"
