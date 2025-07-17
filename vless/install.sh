@@ -1,13 +1,13 @@
 #!/bin/bash
-if pgrep singbox-vless > /dev/null; then
+if pgrep -x singbox-vless > /dev/null; then
   echo "singbox-vless 进程存在，准备杀死..."
   echo
-  pkill singbox-vless
+  pkill -x singbox-vless
   sleep 2
-  if pgrep singbox-vless > /dev/null; then
+  if pgrep -x singbox-vless > /dev/null; then
     echo "singbox-vless 进程未退出，强制杀死"
     echo
-    pkill -9 singbox-vless
+    pkill -9 -x singbox-vless
   fi
 fi
 
