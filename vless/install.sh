@@ -126,8 +126,8 @@ cat <<- EOF > config.json
   "inbounds": [
     {
       "type": "vless",
-      "listen": "::",
-      "listen_port": 443,
+      "listen": "127.0.0.1",
+      "listen_port": $PORT,
       "tag": "vless-ws-tls-in",
       "users": [
         {
@@ -177,10 +177,10 @@ sleep 2
 if systemctl is-active --quiet singbox; then
   echo "singbox 已通过 systemd 启动成功！"
   echo "日志文件位置：/var/log/singbox.log"
-  echo "未监听非标端口443，请配置NGINX进行转发"
+  echo "如果未监听非标端口443，请配置NGINX进行转发"
   echo "VLESS+WS+TLS节点信息如下，粘贴导入使用"
   echo "================================================================="
-  echo -n "vless://${UUID}@${DOMAIN}:443?encryption=none&security=tls&sni=${DOMAIN}&alpn=h2,http/1.1&type=ws&host=${DOMAIN}&path=${ENCODED_PATH}#VLESS" | base64
+  echo "vless://${UUID}@${DOMAIN}:443?encryption=none&security=tls&sni=${DOMAIN}&alpn=h2,http/1.1&type=ws&host=${DOMAIN}&path=${ENCODED_PATH}#VLESS"
   echo "================================================================="
 else
   echo "singbox 启动失败，请使用 'journalctl -u singbox' 查看详细日志"
