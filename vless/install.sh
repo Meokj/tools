@@ -1,13 +1,13 @@
 #!/bin/bash
 if pgrep singbox > /dev/null; then
-  echo "singbox 进程存在，准备杀死..."
+  echo "singbox-vless 进程存在，准备杀死..."
   echo
-  pkill singbox
+  pkill singbox-vless
   sleep 2
-  if pgrep singbox > /dev/null; then
-    echo "singbox 进程未退出，强制杀死"
+  if pgrep singbox-vless > /dev/null; then
+    echo "singbox-vless 进程未退出，强制杀死"
     echo
-    pkill -9 singbox
+    pkill -9 singbox-vless
   fi
 fi
 
@@ -28,13 +28,7 @@ if [ ! -d "$CERT_DIR" ]; then
   exit 1
 fi
 
-length=5
-
-random_str() {
-  cat /dev/urandom | tr -dc 'a-zA-Z' | fold -w $length | head -n 1
-}
-
-VLESS_PATH="/$(random_str)"
+VLESS_PATH="/abcdefg"
 ENCODED_PATH="${VLESS_PATH/\//%2F}"
 CRT_FILE=$(find "$CERT_DIR" -maxdepth 1 -name "*.crt" | head -n 1)
 KEY_FILE=$(find "$CERT_DIR" -maxdepth 1 -name "*.key" | head -n 1)
@@ -63,17 +57,17 @@ if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
 fi
 
 cd /usr/local || exit
-if [ -d anytls ]; then
-  rm -rf anytls
+if [ -d vless ]; then
+  rm -rf vless
 fi
 
 rm -f sing-box-1.12.0-beta.33-linux-amd64.tar.gz
 wget https://github.com/SagerNet/sing-box/releases/download/v1.12.0-beta.33/sing-box-1.12.0-beta.33-linux-amd64.tar.gz
 tar -xzvf sing-box-1.12.0-beta.33-linux-amd64.tar.gz && \
-mv sing-box-1.12.0-beta.33-linux-amd64 anytls
-cd anytls || exit
-mv sing-box singbox
-chmod +x singbox
+mv sing-box-1.12.0-beta.33-linux-amd64 vless
+cd vless || exit
+mv sing-box singbox-vless
+chmod +x singbox-vless
 
 if [ "$PORT" = "443" ]; then
 cat <<- EOF > config.json
@@ -152,37 +146,37 @@ EOF
 fi
 
 echo "配置 systemd 服务..."
-cat <<EOF | sudo tee /etc/systemd/system/singbox.service > /dev/null
+cat <<EOF | sudo tee /etc/systemd/system/singbox-vless.service > /dev/null
 [Unit]
 Description=Sing-box Proxy Service
 After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/local/anytls/singbox run
-WorkingDirectory=/usr/local/anytls
+ExecStart=/usr/local/vless/singbox-vless run
+WorkingDirectory=/usr/local/vless
 Restart=on-failure
-StandardOutput=append:/var/log/singbox.log
-StandardError=append:/var/log/singbox.log
+StandardOutput=append:/var/log/singbox-vless.log
+StandardError=append:/var/log/singbox-vless.log
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
 sudo systemctl daemon-reload
-sudo systemctl enable singbox
-sudo systemctl restart singbox
+sudo systemctl enable singbox-vless
+sudo systemctl restart singbox-vless
 
 sleep 2
-if systemctl is-active --quiet singbox; then
-  echo "singbox 已通过 systemd 启动成功！"
-  echo "日志文件位置：/var/log/singbox.log"
+if systemctl is-active --quiet singbox-vless; then
+  echo "singbox-vless 已通过 systemd 启动成功！"
+  echo "日志文件位置：/var/log/singbox-vless.log"
   echo "如果未监听非标端口443，请配置NGINX进行转发"
   echo "VLESS+WS+TLS节点信息如下，粘贴导入使用"
   echo "================================================================="
   echo "vless://${UUID}@${DOMAIN}:443?encryption=none&security=tls&sni=${DOMAIN}&alpn=h2,http/1.1&type=ws&host=${DOMAIN}&path=${ENCODED_PATH}#VLESS"
   echo "================================================================="
 else
-  echo "singbox 启动失败，请使用 'journalctl -u singbox' 查看详细日志"
+  echo "singbox-vless 启动失败，请使用 'journalctl -u singbox-vless' 查看详细日志"
   exit 1
 fi
