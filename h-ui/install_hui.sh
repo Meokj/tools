@@ -2,6 +2,18 @@
 clear
 IP=$(hostname -I | awk '{print $1}')
 
+if ! command -v netstat &> /dev/null; then
+    echo "netstat 未安装，正在安装..."
+    
+    if [ -f /etc/debian_version ]; then
+        sudo apt update
+        sudo apt install -y net-tools
+    else
+        echo "不支持的操作系统，无法安装 netstat"
+        exit 1
+    fi
+fi
+
 read -p "请输入自定义面板端口号（1024-65535）：" PORT
 if [[ "$PORT" -ge 1024 && "$PORT" -le 65535 ]]; then
     if netstat -tuln | grep -q ":$PORT"; then
