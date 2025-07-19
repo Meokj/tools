@@ -2,6 +2,7 @@
 clear
 IP=$(hostname -I | awk '{print $1}')
 USER_NAME=$(whoami)
+SSH_PORT=$(awk '/^Port/ {print $2}' /etc/ssh/sshd_config)
 
 if ! command -v netstat &> /dev/null; then
     echo "netstat 未安装，正在安装..."
@@ -50,8 +51,8 @@ sudo timedatectl set-timezone Asia/Shanghai
 (crontab -l 2>/dev/null; echo "0 4 * * * $RESTART_HUI") | crontab -
 echo "h-ui服务安装完成，定时任务已设置为每天凌晨4点重启服务!!!"
 echo "================================"
-echo "在本地执行如下这条命令，通过SSH本地端口转发登录面板"
-echo "ssh -L $PORT:127.0.0.1:$PORT $USER_NAME@$IP"
+echo "在本地执行如下这条命令，通过SSH本地端口转发登录面板，防止信息泄露"
+echo "ssh -p $SSH_PORT -L $PORT:127.0.0.1:$PORT $USER_NAME@$IP"
 echo "登录地址：http://localhost:$PORT"
 echo "用户名：sysadmin"
 echo "密码：sysadmin"
