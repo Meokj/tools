@@ -2,7 +2,7 @@
 clear
 IP=$(hostname -I | awk '{print $1}')
 
-read -p "echo "请输入自定义面板端口号（1024-65535）：" PORT
+read -p "请输入自定义面板端口号（1024-65535）：" PORT
 if [[ "$PORT" -ge 1024 && "$PORT" -le 65535 ]]; then
     if netstat -tuln | grep -q ":$PORT"; then
         echo "端口 $PORT 已被占用"
