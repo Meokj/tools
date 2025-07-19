@@ -36,8 +36,8 @@ sudo chmod +x $RESTART_HUI
 sudo timedatectl set-timezone Asia/Shanghai
 (crontab -l 2>/dev/null; echo "0 4 * * * $RESTART_HUI") | crontab -
 echo "h-ui服务安装完成，定时任务已设置为每天凌晨4点重启服务!!!"
-echo
+echo "================================"
 echo "登录地址：$IP:$PORT"
 echo "用户名：sysadmin"
 echo "密码：sysadmin"
-echo
+echo "================================"
