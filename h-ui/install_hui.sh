@@ -18,7 +18,6 @@ fi
 
 while true; do
     PORT=$((RANDOM % 64512 + 1024))
-
     if ! netstat -tuln | grep -q ":$PORT\b"; then
         break
     fi
