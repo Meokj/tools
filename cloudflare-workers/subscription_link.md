@@ -33,7 +33,7 @@
 
 ### 3. 创建 Worker
 
-粘贴subscription_link.js并部署
+粘贴 subscription_link.js 并部署
 
 ---
 
@@ -57,6 +57,12 @@
 | `/abc`            | `abc.txt` → `abc.yaml` → `abc.json`  |
 
 > 📌 注：同一目录下请不要有同名文件，否则扩展名会按 `.txt` → `.yaml` → `.json` 顺序依次尝试
+
+---
+
+### 6. 添加自定义域
+
+禁用预览
 
 ---
 
