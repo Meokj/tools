@@ -100,5 +100,5 @@ Crawler
 
 ### 9. 查看日志
 
-请在 Workers KV 中选择 ACCESS_LOG 再选择 KV Pairs 查看
+请在 Workers KV 中选择 ACCESS_LOG 再选择 KV Pairs 查看访问文件成功日志
 
