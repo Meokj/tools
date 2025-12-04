@@ -28,8 +28,6 @@
   - **Variable name**: `ACCESS_LOG`  
   - **KV Namespace**: 选择你创建的 `ACCESS_LOG`  
 
-在代码中使用 `env.ACCESS_LOG` 即可操作 KV。
-
 ---
 
 ### 3. 设置 Worker 环境变量
