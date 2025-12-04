@@ -16,7 +16,9 @@
 ### 1. 创建 KV 命名空间
 
 1. 登录 Cloudflare 仪表盘 → Workers → KV → Create namespace  
-2. 命名为`ACCESS_LOG`  
+2. 命名为`ACCESS_LOG`
+
+---
 
 ### 2. 在 Worker 中绑定 KV
 
@@ -29,28 +31,32 @@
 
 ---
 
-### 3. 设置 Worker 环境变量
+### 3. 创建 Worker
 
-| 变量名           | 说明                                      |
-| ---------------- | ----------------------------------------- |
-| `PREFIX`         | 可选路径前缀，用于 URL 路由               |
-| `GITHUB_OWNER`   | GitHub 仓库所有者                          |
-| `GITHUB_REPO`    | GitHub 仓库名                               |
-| `GITHUB_TOKEN`   | GitHub Personal Access Token（需要权限访问仓库内容） |
+粘贴subscription_link.js
 
 ---
 
-## URL 使用规则
+### 4. Worker环境变量设置
 
-假设 Worker 部署在 `https://example.com/`：
+| 变量名         | 说明                             |
+|----------------|----------------------------------|
+| `GITHUB_OWNER` | 用户名           |
+| `GITHUB_REPO`  | 仓库名                           |
+| `GITHUB_TOKEN` | 需有读取仓库权限   |
+| `PREFIX`(可选)       | 匹配请求路径的前缀(如 `/prefix`)|
 
-- 用户访问 `https://example.com/config`  
-- Worker 会依次尝试获取：
-  - `config.txt`
-  - `config.yaml`
-  - `config.json`
+---
 
-- 返回第一个存在的文件内容，不要出现同名文件。  
+### 5. 请求路径与 GitHub 文件映射表
+
+| 请求 URL 路径         | 映射 GitHub 文件路径                          |
+|----------------------|-----------------------------------------------|
+| `/prefix/abc`        | `abc.txt` → `abc.yaml` → `abc.json`  |
+| `/prefix/path/abc`  | `path/abc.txt` → `path/abc.yaml` → `path/abc.json` |
+| `/abc`            | `abc.txt` → `abc.yaml` → `abc.json`  |
+
+> 📌 注：同一目录下请不要有同名文件，否则扩展名会按 `.txt` → `.yaml` → `.json` 顺序依次尝试
 
 ---
 
