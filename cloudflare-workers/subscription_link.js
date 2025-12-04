@@ -49,8 +49,7 @@ export default {
 				const logData = {
 					ip,
 					ua,
-					file: filePath,
-					ts
+					access_file: filePath
 				};
 				try {
 					await env.ACCESS_LOG.put(logKey, JSON.stringify(logData));
