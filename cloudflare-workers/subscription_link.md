@@ -33,7 +33,7 @@
 
 ### 3. 创建 Worker
 
-粘贴subscription_link.js
+粘贴subscription_link.js并部署
 
 ---
 
