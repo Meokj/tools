@@ -66,11 +66,13 @@
 
 ---
 
-## 爬虫阻止规则
+###  7. 爬虫阻止规则
 
 Worker 会检查请求的 User-Agent，如果匹配黑名单，则返回 404，不记录日志。  
 
-### 默认黑名单示例
+---
+
+##  8. 默认黑名单
 
 以下 User-Agent 会被阻止访问:
 
@@ -93,4 +95,10 @@ Googlebot
 Yahoo
 Bot
 Crawler
+
+---
+
+### 9. 查看日志
+
+请在 Workers KV 中选择 ACCESS_LOG 再选择 KV Pairs 查看
 
