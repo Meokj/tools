@@ -1,4 +1,4 @@
-# 使用教程
+# Cloudflare Worker 使用教程
 
 ## 功能概述
 
@@ -13,11 +13,26 @@
 
 ## 安装与配置
 
-### 1. KV 命名空间
+### 1. 创建 KV 命名空间
 
-在 Cloudflare Worker 中创建一个 KV 命名空间，命名为 `ACCESS_LOG`。
+1. 登录 Cloudflare 仪表盘 → Workers → KV → Create namespace  
+2. 命名为，例如：`ACCESS_LOG`  
+3. 创建完成后记下 **命名空间 ID**
 
-### 2. Worker 环境变量
+### 2. 在 Worker 中绑定 KV
+
+在 Worker 设置中：
+
+- 找到 **Variables → KV Namespaces**  
+- 添加命名空间  
+  - **Variable name**: `ACCESS_LOG`  
+  - **KV Namespace**: 选择你创建的 `ACCESS_LOG`  
+
+在代码中使用 `env.ACCESS_LOG` 即可操作 KV。
+
+---
+
+### 3. 设置 Worker 环境变量
 
 | 变量名           | 说明                                      |
 | ---------------- | ----------------------------------------- |
@@ -38,7 +53,7 @@
   - `config.yaml`
   - `config.json`
 
-- 返回第一个存在的文件内容。  
+- 返回第一个存在的文件内容，不要出现同名文件。  
 
 ---
 
@@ -48,7 +63,8 @@ Worker 会检查请求的 User-Agent，如果匹配黑名单，则返回 404，�
 
 ### 默认黑名单示例
 
-以下 User-Agent 会被阻止访问：
+以下 User-Agent 会被阻止访问:
+
 Mozilla
 Chrome
 Safari
