@@ -17,7 +17,6 @@
 
 1. 登录 Cloudflare 仪表盘 → Workers → KV → Create namespace  
 2. 命名为`ACCESS_LOG`  
-3. 创建完成后记下 **命名空间 ID**
 
 ### 2. 在 Worker 中绑定 KV
 
