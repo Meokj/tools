@@ -90,7 +90,13 @@ main() {
     read -p "请输入证书路径 (绝对路径): " CRT_PATH
     read -p "请输入私钥路径 (绝对路径): " KEY_PATH
 
+    regex='^[A-Za-z0-9-]{1,63}\.[A-Za-z]{2,63}$'
+    
     if [[ -z "$DOMAIN" ]]; then red "域名不能为空"; exit 1; fi
+    if ! [[ $DOMAIN =~ $regex ]]; then
+        echo "$DOMAIN 不是二级域名"
+        exit 1
+    fi
     if [[ ! -f "$CRT_PATH" ]]; then red "证书文件不存在: $CRT_PATH"; exit 1; fi
     if [[ ! -f "$KEY_PATH" ]]; then red "私钥文件不存在: $KEY_PATH"; exit 1; fi
     if [[ "$CRT_PATH" != /* || "$KEY_PATH" != /* ]]; then red "路径必须是绝对路径!"; exit 1; fi
