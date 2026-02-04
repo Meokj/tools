@@ -1,8 +1,8 @@
 * 安装
 ```bash
-bash <(curl -Ls https://raw.githubusercontent.com/Meokj/tools/main/anytls/install.sh)
+bash <(curl -Ls https://raw.githubusercontent.com/co2f2e/tools/anytls/install.sh)
 ```
 * 卸载
 ```bash
-bash <(curl -Ls https://raw.githubusercontent.com/Meokj/tools/main/anytls/uninstall.sh)
+bash <(curl -Ls https://raw.githubusercontent.com/co2f2e/tools/anytls/uninstall.sh)
 ```
