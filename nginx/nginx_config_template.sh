@@ -86,15 +86,15 @@ reload_nginx() {
 main() {
     check_nginx
 
-    read -p "请输入二级域名: " DOMAIN
+    read -p "请输入三级域名(例如www.abc.com): " DOMAIN
     read -p "请输入证书路径 (绝对路径): " CRT_PATH
     read -p "请输入私钥路径 (绝对路径): " KEY_PATH
 
-    regex='^[A-Za-z0-9-]{1,63}\.[A-Za-z]{2,63}$'
+    regex='^[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$'
     
     if [[ -z "$DOMAIN" ]]; then red "域名不能为空"; exit 1; fi
     if ! [[ $DOMAIN =~ $regex ]]; then
-        echo "$DOMAIN 不是二级域名"
+        echo "$DOMAIN 不是三级域名"
         exit 1
     fi
     if [[ ! -f "$CRT_PATH" ]]; then red "证书文件不存在: $CRT_PATH"; exit 1; fi
