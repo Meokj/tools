@@ -1,8 +1,8 @@
 * 安装
 ```
-bash <(curl -Ls https://raw.githubusercontent.com/co2f2e/tools/main/anyReality/install.sh)
+bash <(curl -Ls https://raw.githubusercontent.com/Meokj/tools/main/anyReality/install.sh)
 ```
 * 卸载
 ```
-bash <(curl -Ls https://raw.githubusercontent.com/co2f2e/tools/main/anytls/uninstall.sh)
+bash <(curl -Ls https://raw.githubusercontent.com/Meokj/tools/main/anytls/uninstall.sh)
 ```
