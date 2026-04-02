@@ -1,5 +1,7 @@
 #!/bin/bash
 clear
+apt update
+apt install sudo -y
 IP=$(hostname -I | awk '{print $1}')
 USER_NAME=$(whoami)
 SSH_PORT=$(awk '/^Port/ {print $2}' /etc/ssh/sshd_config)
@@ -49,7 +51,7 @@ echo "h-ui服务安装完成，定时任务已设置为每天凌晨4点重启服
 echo "================================"
 echo "在powershell中执行如下这条命令，输入服务器密码，通过SSH本地端口转发登录面板，防止信息泄露，面板进行证书和端口设置后请记得防火墙开启该端口"
 echo "ssh -v -p $SSH_PORT -L 60000:127.0.0.1:$PORT $USER_NAME@$IP"
-echo "登录地址：http://localhost:6000"
+echo "登录地址：http://localhost:60000"
 echo "用户名：sysadmin"
 echo "密码：sysadmin"
 echo "================================"
